@@ -24,6 +24,7 @@ namespace Reader
 
         private void button_Click(object sender, EventArgs e)
         {
+            Form1.speed = Convert.ToInt32(textBox1.Text);
             if (!String.IsNullOrWhiteSpace(comboBox1.Items[comboBox1.SelectedIndex].ToString()))
             {
                 this.Visible = false;

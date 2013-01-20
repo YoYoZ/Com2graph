@@ -13,19 +13,17 @@ using System.Threading;
 using System.Windows.Forms.DataVisualization.Charting;
 namespace Reader
 {
+
     public partial class Form1 : Form
     {
         public Form1(string comPort)
         {
             InitializeComponent();
-            s = new SerialPort(comPort, 14400, Parity.None, 8, StopBits.One);
+            s = new SerialPort(comPort, speed, Parity.None, 8, StopBits.One);
             chart1.Series[0].Name = "Линейка";
             chart1.Series[0].Color = Color.Red;
-            int a = 5;
-             int b = ref a;
-            a = 10;
         }
-
+      public static int speed;  
       public static SerialPort s;
       private Thread th;
       private Thread drawer;
@@ -128,6 +126,11 @@ namespace Reader
                 }
                 catch { };
             }
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
 
     }
