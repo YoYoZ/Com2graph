@@ -18,7 +18,7 @@ namespace Reader
             string[] temp = SerialPort.GetPortNames();
             for (int i = 0; i < temp.Length; i++)
             {
-                comboBox1.Items.Add(temp[i].ToString());
+                comboBox1.Items.Add(temp[i].ToString());  //Adding serial port.
             }
         }
 
@@ -28,7 +28,7 @@ namespace Reader
             if (!String.IsNullOrWhiteSpace(comboBox1.Items[comboBox1.SelectedIndex].ToString()))
             {
                 this.Visible = false;
-                new Form1(comboBox1.Items[comboBox1.SelectedIndex].ToString()).Visible = true;
+                new Form1(comboBox1.Items[comboBox1.SelectedIndex].ToString()).Visible = true; //Creating Windows forms
             }
         }
     }

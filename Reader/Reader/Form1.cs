@@ -19,9 +19,9 @@ namespace Reader
         public Form1(string comPort)
         {
             InitializeComponent();
-            s = new SerialPort(comPort, speed, Parity.None, 8, StopBits.One);
+            s = new SerialPort(comPort, speed, Parity.None, 8, StopBits.One); //Initializing com port
             chart1.Series[0].Name = "Линейка";
-            chart1.Series[0].Color = Color.Red;
+            chart1.Series[0].Color = Color.Red; //Creating chart.
         }
       public static int speed;  
       public static SerialPort s;
@@ -30,7 +30,7 @@ namespace Reader
       private Bitmap btmFront1;
       private Graphics grFront1;
       private int lenght = 0;
-      private int previousLenght = 0;
+      private int previousLenght = 0; //This all is required to operate with program.
       private int y = 15;
       public static string[] st;
       public static char[] stt = new char[2];
@@ -46,17 +46,17 @@ namespace Reader
                     {
                         previousLenght = lenght;
                         string LINEW = s.ReadLine();
-                        this.Invoke(new Action(() => { this.addText(LINEW); }));
+                        this.Invoke(new Action(() => { this.addText(LINEW); }));    //This is engine that downoloads info from COM port.
                         try
                         {
                             lenght = Convert.ToInt32(LINEW);
                         }
-                        catch (Exception exc)
+                        catch (Exception exc)           
                         {
                             lenght = previousLenght;
                             this.Invoke(new Action(() => 
                             {
-                                this.addText("Exception: " + exc.Message);
+                                this.addText("Exception: " + exc.Message); //Just typing the exception that happened, to debug it.
                                 this.addText("Value is: " + LINEW);
                             }));
                         }
@@ -72,27 +72,27 @@ namespace Reader
 
         public void addText(string msg)
         {
-            richTextBox1.AppendText(msg);
+            richTextBox1.AppendText(msg);  //Typing the received info.
         }
 
         private void Close(object sender, FormClosingEventArgs e)
         {
             working = false;
-            Environment.Exit(0);
+            Environment.Exit(0); //Properly closing drawing stream AND program itself.
         }
         private void drawLine()
         {
 
-            lock (new object())
+            lock (new object()) //Lock is required, because different thread's can use this code.
             {
                 try
                 {
-                    createBitmap();
-                    grFront1.FillRectangle(Brushes.Red, 0, 30, lenght * 15, 30);
+                    createBitmap(); //Creating another bitmap to operate.
+                    grFront1.FillRectangle(Brushes.Red, 0, 30, lenght * 15, 30); //Filling the grid.
                     this.Invoke(
-                        new Action(() => { this.updateChart(); }));
+                        new Action(() => { this.updateChart(); })); //Updating graph which is created by .NET services.
                 }
-                catch { }
+                catch { } //We don't need crash, do we?
 
             }
             
@@ -101,36 +101,31 @@ namespace Reader
         private void updateChart()
         {
             
-                chart1.Series[0].Points.Add(new DataPoint((double)y, (double)lenght));
+                chart1.Series[0].Points.Add(new DataPoint((double)y, (double)lenght)); //This adds points to graph to draw.
                 y += 1;
-            this.Refresh();
+            this.Refresh(); //And refreshe's it.
         }
 
         private void createBitmap()
         {
-            lock (new object())
+            lock (new object()) //Yup. Another lock.
             {
                 try
                 {
-                    btmFront1 = new Bitmap(700, 100);
-                    grFront1 = Graphics.FromImage(btmFront1);
-                    pictureBox1.Image = btmFront1;
-                    for (int x = 0; x <= 700; x++)
+                    btmFront1 = new Bitmap(700, 100);           //All this
+                    grFront1 = Graphics.FromImage(btmFront1);   //Is code
+                    pictureBox1.Image = btmFront1;              //That draws our own graph.
+                    for (int x = 0; x <= 700; x++)              //Neither it's effective, nor it's beautifull code, but why not?
                     {
                         for (int y = 0; y <= 100; y++)
                         {
-                            grFront1.DrawLine(Pens.Black, x * 15, 1, x * 15, 100);
+                            grFront1.DrawLine(Pens.Black, x * 15, 1, x * 15, 100); //Yes. Grid.
                             grFront1.DrawLine(Pens.Black, 1, x * 15, 700, x * 15);
                         }
                     };
                 }
                 catch { };
             }
-        }
-
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
-        {
-
         }
 
     }
